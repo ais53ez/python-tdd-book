@@ -25,7 +25,6 @@ class HomePageTest(TestCase):
 
         response = self.client.get('/')
         content = response.content.decode()
-        print("***", content)
         self.assertIn('itemey 1', content)
         self.assertIn('itemey 2', content)
 
