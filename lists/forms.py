@@ -3,7 +3,7 @@ from django import forms
 from lists.models import Item
 
 
-ERROR_EMPTY_ITEM = "You can't have an empty list item"
+ERROR_EMPTY_ITEM = "You can not have an empty list item"
 
 
 class ItemForm(forms.models.ModelForm):
