@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 from .base import FunctionalTest
+from unittest import skip
 
 
 ERROR_EMPTY_ITEM = "You can not have an empty list item"
@@ -65,8 +66,8 @@ class ItemValidationTest(FunctionalTest):
 
         # She sees a helpful error message
         self.wait_for(lambda: self.assertEqual(
-            self.get_error_element().text,
-            "You have already got this in your list"
+            "You have already got this in your list",
+            self.get_error_element().text
         ))
 
     def test_error_messages_are_cleared_on_input(self):
