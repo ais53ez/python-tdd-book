@@ -45,7 +45,7 @@ class MyListTest(FunctionalTest):
         self.wait_for(
             lambda: self.assertEqual(self.browser.current_url, first_list_url)
         )
-
+        
         # She decides to start another list, just to see
         self.browser.get(self.live_server_url)
         self.add_list_item('Click cows')
