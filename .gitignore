@@ -6,4 +6,5 @@ __pycache__
 /static
 .env
 README_RunJenkinsLocallyWithRelay.txt
+/functional_tests/screendumps
 
