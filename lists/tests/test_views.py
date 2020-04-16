@@ -222,3 +222,52 @@ class MyListsTest(TestCase):
         response = self.client.get('/lists/users/a@b.com/')
         self.assertEqual(response.context['owner'], correct_user)
 
+    def test_show_shared_lists(self):
+        user = User.objects.create(email='user@1.com')
+        list_ = List.objects.create()
+        item_ = Item.objects.create(list=list_, text='share this')
+        list_.shared_with.add(user)
+        response = self.client.get(f'/lists/users/{user.email}/')
+        self.assertContains(response, 'share this')
+
+
+class ShareListTest(TestCase):
+    def test_post_redirects_to_lists_page(self):
+        list_ = List.objects.create()
+        item = Item.objects.create(list=list_, text='new item')
+        response = self.client.post(
+            f'/lists/{list_.id}/share'
+        )
+        self.assertRedirects(response, list_.get_absolute_url())
+
+    def test_same_user_part_of_shared_when_requested(self):
+        email = 'a@b.com'
+        user = User.objects.create(email=email)
+        list_ = List.objects.create()
+        response = self.client.post(
+            f'/lists/{list_.id}/share',
+            data={'share_with_email': email}
+        )
+        self.assertEqual([email], [u.email for u in list_.shared_with.all()])
+
+    def test_unknown_user_will_not_be_shared(self):
+        email = 'un@known.com'
+        list_ = List.objects.create()
+        response = self.client.post(
+            f'/lists/{list_.id}/share',
+            data={'share_with_email': email}
+        )
+        self.assertEqual([], [u.email for u in list_.shared_with.all()])
+
+    def test_user_shows_up_in_list_sharee(self):
+        list_ = List.objects.create()
+        email = 'to_share@with.com'
+        user = User.objects.create(email=email)
+        self.client.post(
+            f'/lists/{list_.id}/share',
+            data={'share_with_email': email}
+        )
+        response = self.client.get(f'/lists/{list_.id}/')
+        self.assertContains(response, 'List shared with')
+        self.assertContains(response, email)
+

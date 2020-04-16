@@ -36,3 +36,13 @@ def my_lists(request, email):
     owner = User.objects.get(email=email)
     return render(request, 'my_lists.html', {'owner': owner})
 
+
+def share_list(request, list_id):
+    list_ = List.objects.get(id=list_id)
+    try:
+        user = User.objects.get(email=request.POST.get('share_with_email'))
+        list_.shared_with.add(user.email)
+    except User.DoesNotExist:
+        pass
+    #return render(request, 'list.html', {'list': list_})
+    return redirect(list_)

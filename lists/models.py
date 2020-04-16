@@ -5,6 +5,7 @@ from django.conf import settings
 
 class List(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    shared_with = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='shared_lists')
 
     @property
     def name(self):
@@ -29,7 +30,4 @@ class Item(models.Model):
     class Meta:
         ordering = ('id',)
         unique_together = (('list', 'text'),)
-
-
-
 
